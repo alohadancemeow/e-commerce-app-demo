@@ -2,16 +2,14 @@ import React from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import Button from '../Button'
+import { Inputs } from '../../types'
+import { useAsyncCall, useAuthenticate } from '../../hooks'
 
 interface Props { }
 
-type Inputs = {
-    username: string,
-    email: string,
-    password: string,
-};
-
 const Signup: React.FC<Props> = () => {
+
+    const { signup, error, loading } = useAuthenticate()
 
     // HOOKS: useForm
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
@@ -19,7 +17,8 @@ const Signup: React.FC<Props> = () => {
 
     // HANDLE: onSubmit
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        console.log(data);
+        // console.log(data);
+        signup(data)
     }
 
     return (
@@ -105,8 +104,12 @@ const Signup: React.FC<Props> = () => {
                         }
                     </div>
 
-                    <Button type='submit' width='100%' style={{ margin: '0.5rem 0' }}>Submit</Button>
+                    <Button type='submit' loading={loading} width='100%' style={{ margin: '0.5rem 0' }}>Submit</Button>
                 </form>
+                
+                {/* Error from firebase */}
+                {error && <p className="paragraph paragraph--erorr">{error}</p>}
+
             </div>
         </>
     )
